@@ -1,0 +1,19 @@
+# Display Call or Put info based on which side the column
+# is displayed on in thinkorswim option tree.
+# Displays on call side % premium | % (premium + stock '1 contract exercised')
+# Displays on put side % premium | breakeven price 
+
+input maxPctThreshold = .5;
+def maxShares = 100;
+def maxContracts = 1;
+def premium = maxContracts * close * maxShares;
+def totalStkPri1C = maxshares*close(getunderlyingsymbol());
+def premiumPct = premium / totalStkPri1C;
+def newBreakEvenPrice = getstrike() - close;;
+def stockPriceGain = getstrike() - close(getunderlyingSymbol());
+def premiumPlusShares = premium + (maxshares * stockpriceGain);
+def premiumPlusSharesPct = premiumPlusShares / totalstkPri1C;
+
+addlabel(yes, "show");
+#AddLabel(yes, displayThis, displayColor);
+addlabel(yes, if isPut() then (aspercent(premiumPct)+" | "+AsPrice(newBreakEvenPrice)) else (aspercent(premiumPct) + " | " + aspercent(premiumPlusSharesPct)), if isPut() then (color.DARK_GREEN) else (if premiumPlusSharesPct >= maxPctThreshold then color.green else color.black)); 
